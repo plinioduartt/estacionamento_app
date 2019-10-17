@@ -1,44 +1,97 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      Home
-    </ion-title>
-  </ion-toolbar>
+<ion-header class="pages">
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
+  <img class="header-logo" src="../../assets/logo.png"/>
+  <ion-title (click)="open_login()" *ngIf="!authenticated">
+    Login
+  </ion-title>
+
+  <ion-title *ngIf="authenticated">
+    {{ user != null && user != undefined ? user.name : "..." }}
+  </ion-title>
 </ion-header>
 
 <ion-content>
-    <ion-card class="welcome-card">
-      <img src="/assets/shapes.svg" alt="" />
-      <ion-card-header>
-        <ion-card-subtitle>Get Started</ion-card-subtitle>
-        <ion-card-title>Welcome to Ionic</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p>
-      </ion-card-content>
-    </ion-card>
-    <ion-list lines="none">
-      <ion-list-header>
-        <ion-label>Resources</ion-label>
-      </ion-list-header>
-      <ion-item href="https://ionicframework.com/docs/">
-        <ion-icon slot="start" color="medium" name="book"></ion-icon>
-        <ion-label>Ionic Documentation</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/building/scaffolding">
-        <ion-icon slot="start" color="medium" name="build"></ion-icon>
-        <ion-label>Scaffold Out Your App</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/layout/structure">
-        <ion-icon slot="start" color="medium" name="grid"></ion-icon>
-        <ion-label>Change Your App Layout</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/theming/basics">
-        <ion-icon slot="start" color="medium" name="color-fill"></ion-icon>
-        <ion-label>Theme Your App</ion-label>
-      </ion-item>
-    </ion-list>
+    <div class="consult-overlay" *ngIf="consulted_ticket.running">
+      <div class="consulted-ticket">
+        <div class="header">
+          <p (click)="consulted_ticket.running = false" class="close">Fechar</p>
+        </div>
+        <div class="content">
+          <div class="legendas">            
+              <p>Entrada</p>
+
+              <p>Saída</p>
+              
+              <p>Preço</p>
+              
+              <p>Código</p>
+
+              <p>Criado por</p>
+              
+              <p>Status</p>
+            </div>
+            <div>
+              <p>{{ consulted_ticket.created_at }}</p>
+              
+              <p>{{ consulted_ticket.end_at != null ? consulted_ticket.end_at : 'Em andamento' }}</p>
+
+              <p>R$ {{ consulted_ticket.price }},00</p>
+              
+              <p>{{ consulted_ticket.code }}</p>
+              
+              <p>{{ consulted_ticket.user_name }}</p>
+
+              <p>{{ consulted_ticket.status }}</p>
+            </div>
+        </div>
+        
+        <div class="buttons" *ngIf="user !== undefined && user !== null">
+          <button *ngIf="consulted_ticket.status == 'Ativo' && consulted_ticket.user_id == user.id">
+            Pagar
+          </button>
+          <button *ngIf="consulted_ticket.status == 'Inativo'" disabled>
+            Ticket pago
+          </button>
+        </div>
+        
+      </div>
+    </div>
+    
+    <div class="status-block">
+      <p *ngIf="ticket.running">Ticket em andamento</p> 
+
+      <!-- Se não tiver ticket em andamento -->
+      <p class="sem-ticket" *ngIf="!ticket.running">Nenhum ticket ativo</p>
+    </div>
+    <div class="container">
+      <div class="ticket" *ngIf="ticket.running" (click)="ticket_details()">
+        <div class="legendas">
+          <p>Permanência</p>
+          <h1>{{ ticket.timer }}</h1>
+          <p>Entrada</p>
+          <p>{{ ticket.manipulated_date }}</p>
+        </div>
+        <div>
+          <p>Ticket</p>
+          <h1>{{ ticket.code }}</h1>
+          <p>Preço</p>
+          <p>R$ {{ ticket.price }},00</p>
+        </div>
+        <div class="details">
+          <p>Clique para ver detalhes</p>
+        </div>
+      </div>
+
+      <!-- Se não tiver ticket em andamento -->
+        <div class="create-ticket" (click)="create_ticket()" *ngIf="!ticket.running">
+          <p>Gerar ticket</p>
+        </div>
+
+      <button (click)="consult_ticket()"><img src="../../assets/billing.png"/>Consultar ticket</button>
+      <button (click)="nav_to('/my-tickets')" *ngIf="authenticated"><img src="../../assets/ticket.png"/>Meus tickets</button>
+      <!-- Se não tiver ticket em andamento -->
+        <button *ngIf="!authenticated" (click)="check_available_slots()"><img src="../../assets/car.png"/>Vagas disponíveis</button>
+    </div>
 </ion-content>

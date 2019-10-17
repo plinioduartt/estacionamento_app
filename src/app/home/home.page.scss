@@ -1,4 +1,206 @@
-.welcome-card img {
-  max-height: 35vh;
+.container {
+  display: inline-grid;
+  margin: 0 24px;
+  height: auto;
+  background: #eee;
+  position: relative;
+  padding: 35px;
+  border-radius: 5pt;
+
+  button:nth-last-child(1) {
+    margin-top: 15px;
+  }
+
+  button {
+    max-height: 50px;
+    min-height: 50px;
+    width: 100%;
+    position: relative;
+    background: #1c4487;
+    display: flex;
+    line-height: 25px;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 5pt;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    outline: none;
+
+    img {
+      width: 25px;
+      margin-left: 30px;
+      margin-right: 10px;
+    }
+
+  }
+}
+
+.ticket {
+  height: 200px;
+  background: #fff;
+  width: 245px;
+  position: relative;
+  display: inline-flex;
+  border-radius: 5pt;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.20);
+  padding: 20px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  
+  div {
+    h1 {
+      font-size: 30px;
+      color: #1c4487;
+      margin-top: 0px;
+      font-weight: 600;
+      margin-right: 5px;
+    }
+
+    p {
+      font-size: 13px;
+      color: #a0a0a0;
+    }
+  }
+}
+
+
+.status-block {
+  display: flex;
+  justify-content: end;
+  position: relative;
+  padding: 35px 0px 0px 35px;
+
+  p {
+    font-size: 15px;
+    color: #a0a0a0;
+  } 
+}
+
+.create-ticket {
+  background: #1c4487;
+  border-radius: 5pt;
+  position: relative;
+  display: inline-flex;
+  padding: 0 22px;
+  margin-bottom: 15px;
+  height: 80px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  justify-content: center;
+  width: 245px;
+  
+  p {
+    color: #fff;
+    font-size: 25px;
+    font-weight: 600;
+  }
+}
+
+.sem-ticket {
+  margin-top: 60px;
+}
+
+.details {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+
+  p {
+    font-size: 10px !important;
+    color: #8d8d8d !important;
+  }
+}
+
+img.header-logo {
+  width: 63px;
+  margin-top: 1px;
+  position: absolute;
+  left: calc(50% - 35px);
+}
+
+
+ion-header.pages ion-title {
+  color: #fff;
+  font-size: 15px;
+  position: absolute;
+  right: 0 !important;
+  flex-wrap: nowrap;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+
+.consult-overlay {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  padding: 0px 20px 0 24px;
+}
+
+.consulted-ticket {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  top: calc(50% - 200px);
+  min-height: 300px;
+  border-radius: 5pt;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.24);
+
+  .header  {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+
+    .close {
+      color: #ddd;
+      font-size: 16px;
+    }
+  }
+
+  .content {
+    display: flex;
+    padding: 40px 40px 25px 40px;
+
+    div:nth-last-child(1) {
+      text-align: right;
+      margin-left: 5px;
+      p {
+        color: #ddd;
+        width: 155px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .legendas {
+      p {
+        color: #8d8d8d;
+      }
+    }
+  }
+}
+
+.buttons {
+  padding: 0 40px 0 40px;
+  position: relative;
+
+  button {
+    width: 100%;
+    height: 50px;
+    border-radius: 5pt;
+    background: #424242;
+    font-size: 16px;
+    color: #fff;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    outline: none;
+    margin-bottom: 20px;
+  }
+
+  button[disabled] {
+    background: #a4a4a4 !important;
+  }
 }

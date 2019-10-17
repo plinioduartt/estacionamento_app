@@ -1,0 +1,26 @@
+<ion-header class="pages">
+  <ion-buttons slot="start">
+    <ion-back-button></ion-back-button>
+  </ion-buttons>
+  <ion-title>Meus tickets</ion-title>
+</ion-header>
+
+<ion-content>
+  <p class="my-tickets">Meus tickets</p>
+  <div class="itens-block">
+    <div class="item" *ngFor="let item of itens">
+      <div>
+        <div [ngClass]="{'active': item.status == 'Ativo', 'inactive': item.status == 'Inativo'}">{{ item.code }}</div>
+      </div>
+      <div>
+        <p>Entr. {{ item.created_at }}</p>
+        <p>Saída {{ item.end_at == null ? '...': item.end_at }}</p>
+      </div>
+      
+      <div>
+        <p>{{ item.status }}</p>
+        <p class="footer-field">R$ {{ item.price }},00</p>
+      </div>
+    </div>
+  </div>
+</ion-content>

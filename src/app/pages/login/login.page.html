@@ -1,0 +1,18 @@
+<ion-header class="pages">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Login</ion-title>
+</ion-header>
+
+<ion-content>
+  <div class="login-block">
+    <img src="../../../assets/logo.png"/>
+    <form [formGroup]="group">
+      <ion-input type="text" [(ngModel)]="form.username" formControlName="username" placeholder="Usuário"></ion-input>
+      <ion-input type="password" [(ngModel)]="form.password" formControlName="password" placeholder="Senha"></ion-input>
+      <button type="submit" [disabled]="!group.valid" (click)="login()">Entrar</button>
+    </form>    
+  </div>
+  <p (click)="nav_to('/register')" class="link">Cadastre-se</p>
+</ion-content>

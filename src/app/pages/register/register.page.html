@@ -1,0 +1,20 @@
+<ion-header class="pages">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registre-se</ion-title>
+</ion-header>
+
+<ion-content>
+  <div class="register-block">
+    <form [formGroup]="group" class="formulario register">
+      <ion-input [(ngModel)]="form.name" formControlName="name" type="text" placeholder="Nome"></ion-input>
+      <ion-input [(ngModel)]="form.username" formControlName="username" type="text" placeholder="Usuário"></ion-input>
+      <ion-input [(ngModel)]="form.phone" formControlName="phone" type="tel" [brmasker]="{form: group.get('phone'), phone: true}" maxlength="15" placeholder="(99) 99999-9999"></ion-input>
+      <ion-input [(ngModel)]="form.password" formControlName="password" type="password" placeholder="Senha"></ion-input>
+      <ion-input [(ngModel)]="confirm_password" formControlName="confirm_password" type="password" placeholder="Confirme a senha"></ion-input>
+      <button [disabled]="!group.valid" (click)="register()">Registrar</button>
+    </form>
+  </div>
+  <p (click)="nav_to('/login')" class="link">Já possuo uma conta</p>
+</ion-content>

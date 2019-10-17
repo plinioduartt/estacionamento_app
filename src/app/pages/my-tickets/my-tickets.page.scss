@@ -1,0 +1,57 @@
+.itens-block {
+    display: inline-grid;
+    height: auto;
+    background: #eee;
+    position: relative;
+    padding: 20px;
+    border-radius: 5pt;
+    left: calc(50% - 157.5px);
+    margin: 80px 0 50px 0;
+
+    .item {
+        width: 275px;
+        background: #fff;
+        margin-top: 20px;
+        border-radius: 5pt;
+        height: 80px;
+        display: flex;
+        padding: 15px;
+        
+        div {
+            div {
+                height: 100%;
+                border-radius: 5pt;
+                text-align: center;
+                -webkit-box-align: center;
+                align-items: center;
+                padding: 10px;
+                color: #fff;
+                position: relative;
+                margin-right: 10px;
+                line-height: 30px;
+            }
+            p {
+                font-size: 12px;
+                margin-top: 5px;
+                width: 134px;
+                color: #a0a0a0;
+            }
+        }
+    }
+
+}
+
+.inactive {
+    background: #637ead;
+}
+
+.active {
+    background: #1c4487;
+}
+
+p.my-tickets {
+    position: absolute;
+    top: 35px;
+    left: 25px;
+    color: #a0a0a0;
+}

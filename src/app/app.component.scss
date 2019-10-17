@@ -1,0 +1,39 @@
+.first-block {
+    ion-item {
+        img {
+            max-width: 30px;
+            margin-right: 25px;
+        }
+        ion-label {
+            color: #909090 !important;
+        }
+    }
+}
+
+.second-block {
+    ion-item {
+        ion-icon {
+            font-size: 30px;
+            color: #ddd;
+        }
+        ion-label {
+            color: #909090 !important;
+        }
+    }
+}
+
+ion-list.menu {
+    padding: 10px;
+    padding-top: 30px;
+}
+
+p.divisor-label {
+    color: #a0a0a0;
+    margin: 20px 20px;
+}
+
+p.logout-link {
+    float: right;
+    margin-right: 20px;
+    color: #909090;
+}

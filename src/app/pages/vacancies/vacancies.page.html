@@ -2,30 +2,26 @@
   <ion-buttons slot="start">
     <ion-back-button></ion-back-button>
   </ion-buttons>
-  <ion-title>Meus tickets</ion-title>
+  <ion-title>Estacionamento</ion-title>
 </ion-header>
 
-<ion-content>
-  <p class="my-tickets">Meus tickets</p>
+<ion-content>  
+  <p class="my-tickets">Vagas disponíveis</p>
   <div class="itens-block" *ngIf="itens.length > 0">
     <div class="item animated bounceIn" *ngFor="let item of itens">
       <div>
         <div [ngClass]="{'active': item.status == 'Ativo', 'inactive': item.status == 'Inativo'}">{{ item.code }}</div>
       </div>
-      <div>
-        <p>Entr. {{ item.created_at }}</p>
-        <p>Saída {{ item.end_at == null ? '...': item.end_at }}</p>
-      </div>
       
       <div>
-        <p>{{ item.status }}</p>
-        <p class="footer-field">R$ {{ item.price }}</p>
+        <p>{{ item.status == 'Ativo' ? 'Disponível': 'Ocupada' }}</p>
       </div>
     </div>
   </div>
+  
   <div class="itens-block" *ngIf="itens.length == 0">
     <div class="item">
-      <p class="aviso">Nenhum item encontrado</p>
+      <p>Nenhum item encontrado</p>
     </div>
   </div>
 </ion-content>

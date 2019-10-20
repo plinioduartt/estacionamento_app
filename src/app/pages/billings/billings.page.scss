@@ -1,0 +1,184 @@
+.itens-block {
+    display: inline-grid;
+    height: auto;
+    background: #eee;
+    position: relative;
+    padding: 20px;
+    border-radius: 5pt;
+    left: calc(50% - 157.5px);
+    margin: 80px 0 50px 0;
+
+    .item {
+        width: 275px;
+        background: #fff;
+        margin-top: 20px;
+        border-radius: 5pt;
+        height: 80px;
+        display: flex;
+        padding: 15px;
+        position: relative;
+        margin-bottom: 20px;
+
+        div {
+            div {
+                border-radius: 50pt;
+                text-align: center;
+                padding: 0;
+                color: #fff;
+                position: relative;
+                margin-right: 10px;
+                width: 20px;
+                height: 20px;
+                position: absolute;
+                top: -4px;
+                left: -5px;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            }
+            p {
+                font-size: 12px;
+                margin-top: 5px;
+                width: 134px;
+                color: #a0a0a0;
+            }
+        }
+    }
+
+}
+
+.aviso {
+    width: 275px;
+}
+
+.inactive {
+    background: #0ec254;
+}
+
+.active {
+    background: #dc1042;
+}
+
+p.my-tickets {
+    position: absolute;
+    top: 35px;
+    left: 25px;
+    color: #a0a0a0;
+}
+
+
+.consult-overlay {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    padding: 0px 20px 0 24px;
+  }
+  
+  .consulted-ticket {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    top: calc(50% - 200px);
+    min-height: 300px;
+    border-radius: 5pt;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.24);
+  
+    .header  {
+      position: absolute;
+      top: 0px;
+      right: 15px;
+  
+      .close {
+        color: #ddd;
+        font-size: 16px;
+      }
+    }
+
+    .title-method  {
+        position: absolute;
+        top: 0px;
+        left: 40px;
+        .method {
+            color: #a0a0a0;
+            font-size: 16px;
+        }
+    }
+  
+    .content {
+      display: flex;
+      padding: 60px 40px 25px 40px;
+  
+      div:nth-last-child(1) {
+        p {
+          color: #ddd;
+          width: 155px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
+  
+      .legendas {
+        p {
+          color: #8d8d8d;
+        }
+      }
+    }
+  }
+  
+  .buttons {
+    padding: 0 40px 0 40px;
+    position: relative;
+  
+    button {
+      width: 100%;
+      height: 50px;
+      border-radius: 5pt;
+      background: #424242;
+      font-size: 16px;
+      color: #fff;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+      outline: none;
+      margin-bottom: 20px;
+    }
+  
+    button[disabled] {
+      background: #a4a4a4 !important;
+    }
+  }
+
+form .content .fields {
+
+    ion-input {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5pt;
+        margin-bottom: 10px;
+        height: 40px;
+        color: #a0a0a0;
+        font-weight: 300;
+        padding: 0 10px !important;
+    }
+
+    div {
+        display: flex;
+
+        ion-input:nth-last-child(1) {
+            margin-left: 10px;
+            font-weight: 300;
+        }
+
+        ion-input:nth-last-child(2) {
+            font-weight: 300;
+        }
+    }
+}
+
+p.method-p {
+  white-space: nowrap;
+  position: absolute;
+  right: 5px;
+  bottom: -7px;
+  font-size: 10px;
+  color: #a0a0a0;
+}

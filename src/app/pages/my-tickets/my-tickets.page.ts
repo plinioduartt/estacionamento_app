@@ -9,7 +9,7 @@ import { AlertController, LoadingController, NavController, Events } from '@ioni
 })
 export class MyTicketsPage implements OnInit {
   user: any;
-  itens: any;
+  itens = [];
   loading: any;
 
   constructor(public ws: WebserviceService, public loadingCtrl: LoadingController) {
@@ -33,6 +33,11 @@ export class MyTicketsPage implements OnInit {
     await this.loader('Aguarde um instante...');
     this.ws.get('user/tickets/'+this.user.id).then( async (res) => {
       await res.tickets.forEach( async (item, index) => {
+        if (item.status == 'Ativo') {
+          res.tickets[index].price = await this.get_price(item);
+          res.tickets[index].price = res.tickets[index].price.toFixed(2);
+        }
+
         let parts = item.created_at.split(" ");
         let hours = parts[1];
         let hours_parts = hours.split(":");
@@ -55,6 +60,10 @@ export class MyTicketsPage implements OnInit {
 
         if (item.end_at != null && item.end_at != undefined) {
           let parts_endat = item.end_at.split(" ");
+          if (parts_endat[0] == item.end_at)
+            parts_endat = item.end_at.split("T");
+
+          console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", parts_endat)
           let hours_endat = parts_endat[1];
           let hours_endat_parts = hours_endat.split(":");
           hours_endat = hours_endat_parts[0]+':'+hours_endat_parts[1];
@@ -63,6 +72,7 @@ export class MyTicketsPage implements OnInit {
           let aux_date_endat_parts = aux_date_endat.split("/");
           aux_date_endat = aux_date_endat_parts[0]+'/'+aux_date_endat_parts[1];
           res.tickets[index].end_at = aux_date_endat + ' ' + hours_endat;
+          console.log('AAAAAA', aux_date_endat + ' ' + hours_endat)
         }       
       });
       await this.loader('dismiss');
@@ -71,6 +81,30 @@ export class MyTicketsPage implements OnInit {
       await this.loader('dismiss');
       console.log(err);
     });
+  }
+
+  async get_price(item) {
+    console.log(item);
+    return new Promise( async (resolve) => {
+      var now = await Math.round((Date.now() / 1000));        
+      var aux = new Date();
+      await aux.setTime(Date.parse( item.created_at ));
+      let created_at = await Math.round(aux.getTime() / 1000) ;
+      let diff = await ((now - created_at));
+      let min_diff = diff / 60;
+      
+      if (min_diff < 30) { // periodo gratuito
+        resolve(0);
+      } else { // fora do periodo gratuito
+        if (min_diff <= 60) { // primeira hora
+          resolve(10);
+        } else { // demais horas
+          let total = await (((min_diff - 60) / 60) * 5) + 10;
+          console.log("TOTAL", total);
+          resolve(total);
+        }
+      }
+    });    
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController, LoadingController, NavController, Events } from '@ionic/angular';
 import { WebserviceService } from '../services/webservice.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -15,11 +16,12 @@ export class HomePage {
   available_park_slots: any;
   ticket_timer: any = '';
   ticket: any = {
+    id: '...',
     running: true,
     timer: '...',
     manipulated_date: '...',
     created_at: '...',
-    price: '...',
+    price: 0,
     code: '...',
     status: '...'
   };
@@ -29,12 +31,13 @@ export class HomePage {
     manipulated_date: '...',
     created_at: '...',
     end_at: '...',
-    price: '...',
+    price: 0,
     code: '...',
     status: '...',
     user_name: '...',
     user_id: '...'
   };
+  radio_value: any;
   user: any = {};
 
   constructor(
@@ -42,10 +45,16 @@ export class HomePage {
     public ws: WebserviceService, 
     public loadingCtrl: LoadingController,
     public router: NavController,
-    public events: Events
+    public events: Events,
+    private route: Router
   ) {
     this.events.subscribe('consult_ticket', async (data) => {
       this.consult_ticket();
+    });
+
+    this.events.subscribe('finalizado', async (data) => {
+      this.handle_tickets();
+      this.consulted_ticket.running = false;
     });
   }
 
@@ -62,26 +71,38 @@ export class HomePage {
   }
 
   async check_available_slots() {
-    this.loader('Verificando...');
-    this.ws.get('tickets').then( async (res) => {
-      this.loader('dismiss');
-     this.available_park_slots = await (this.park_slots - res.tickets.length);
+    await this.loader('Verificando...');
+    this.ws.get('vacancies').then( async (res) => {
+      await this.loader('dismiss');
+      console.log(res);
+      var availabe = 0;
+      var not_available = 0;
+      var vacancies = [];
+      var content = '';
       let title = "";
-      let content = "";
-      if (this.available_park_slots > 1) {
-        title = "Que sorte!";
-        content = `${ this.available_park_slots } vagas disponíveis`
-      } else if (this.available_park_slots === 1) {
-        title = "Que sorte!";
-        content = `1 vaga disponível`
+
+      await res.vacancies.forEach( async (item, index) => {
+        vacancies.push({ code: item.code, status: item.status });
+
+        if (item.status == 'Ativo') {
+          availabe++;
+        } else {
+          not_available++;
+        }
+      });
+      
+      this.available_park_slots = await availabe;
+
+      if (this.available_park_slots > 0) {
+        this.router.navigateForward([ '/vacancies', { vacancies: JSON.stringify(vacancies) } ]);
       } else {
         title = "Ops..."
-        content = `Nenhuma vaga disponível...`;
+        content = `O estacionamento está lotado!`;
+        this.basic_alert(title, content);
       }
 
-      this.basic_alert(title, content);
     }, async (err) => {
-      this.loader('dismiss');
+      await this.loader('dismiss');
       console.log(err);
     });
   }
@@ -130,7 +151,8 @@ export class HomePage {
               if (this.available_park_slots == 0) {
                 this.basic_alert('Ops...', 'O estacionamento está cheio!');
               } else {
-                this.create_ticket_function();
+                // this.create_ticket_function();
+                this.present_radio_alert();
               }
             }
           }
@@ -148,8 +170,9 @@ export class HomePage {
 
       let data = {
         status: "Ativo",
-        price: "10",
-        user_id: this.user.id
+        price: "0",
+        user_id: this.user.id,
+        vacancy_id: this.radio_value
       };
       console.log('ticket sendo criado -->', data);
       this.ws.post('tickets', data).subscribe( async (res) => {
@@ -159,6 +182,7 @@ export class HomePage {
 
           localStorage.setItem('ticket', JSON.stringify(ticket));
           this.ticket.running = true;
+          this.ticket.id = ticket.id;
           this.ticket.created_at = ticket.created_at;
           this.ticket.price = ticket.price;
           this.ticket.code = ticket.code;
@@ -187,6 +211,54 @@ export class HomePage {
       });
     }, 2000);
     
+  }
+
+  async present_radio_alert() {
+    await this.loader('Aguarde um instante...');
+    this.ws.get('vacancies').then( async (res) => {
+      await this.loader('dismiss');
+      var radio = [];
+
+
+      await res.vacancies.forEach( async (item, index) => {
+        if (item.status == 'Ativo') {
+         
+          radio.push( {
+            name: 'vacancy',
+            type: 'radio',
+            label: item.code,
+            value: item.id,
+            checked: false
+          });
+        } 
+      });
+
+      const alert = await this.alertController.create({
+        header: 'Escolha a vaga',
+        inputs: radio,
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              console.log('Confirm Cancel');
+            }
+          }, {
+            text: 'Ok',
+            handler: (value) => {
+              this.radio_value = value;
+              this.create_ticket_function();
+            }
+          }
+        ]
+      });
+      await alert.present();
+
+    }, async (err) => {
+      console.log(err);
+      await this.loader('dismiss');
+    });
   }
 
   async ticket_details() {
@@ -226,8 +298,11 @@ export class HomePage {
     this.router.navigateForward('/login');
   }
 
-  ionViewDidEnter() {
+  ngOnInit() {
     this.handle_authentication();
+    setTimeout(() => {
+      this.get_price();
+    }, 3000);
   }
 
   async handle_authentication() {
@@ -242,6 +317,7 @@ export class HomePage {
   }
 
   async handle_tickets() {
+    await this.loader('...');
     this.ws.get('user/tickets/active/'+this.user.id).then( async (res) => {
       console.log('Quantidade de tickets meus que estão ativos -->', res);
       if (res.tickets == null) {
@@ -254,11 +330,14 @@ export class HomePage {
         this.ticket.created_at = res.tickets.created_at;
         this.ticket.price = res.tickets.price;
         this.ticket.code = res.tickets.code;
+        this.ticket.id = res.tickets.id;
         this.handle_time();
         this.handle_ticket_timer();
       }
+      await this.loader('dismiss');
     }, async (err) => {
       console.log(err);
+      await this.loader('dismiss');
     });
   }
 
@@ -266,11 +345,8 @@ export class HomePage {
     let parts = this.ticket.created_at.split(" ");
     let hours = parts[1];
     let date = parts[0];
-    console.log("DATA -->", date);
-    console.log("HORAS -->", hours);
     let aux_date = date.split("-").reverse().join('/');
     this.ticket.manipulated_date = aux_date + ' ' + hours;
-    console.log("DATA MANIPULADA -->", this.ticket.manipulated_date)
   }
 
 
@@ -335,13 +411,31 @@ export class HomePage {
                   let aux_date2 = date2.split("-").reverse().join('/');
                   this.consulted_ticket.end_at = aux_date2 + ' ' + hours2;
                 }
+                
+                var now = await Math.round((Date.now() / 1000));        
+                var aux = new Date();
+                await aux.setTime(Date.parse( res.ticket[0].created_at ));
+                let created_at = await Math.round(aux.getTime() / 1000) ;
+                let diff = await ((now - created_at));
+                let min_diff = diff / 60;
+                
+                if (min_diff < 30) { // periodo gratuito
+                  res.ticket[0].price = 0;
+                } else { // fora do periodo gratuito
+                  if (min_diff <= 60) { // primeira hora
+                   res.ticket[0].price = 10; // primeira hora
+                  } else { // demais horas
+                    let total = (((min_diff - 60) / 60) * 5) + 10;
+                   res.ticket[0].price = total;
+                  }
+                }
 
                 let parts = res.ticket[0].created_at.split(" ");
                 let hours = parts[1];
                 let date = parts[0];
                 let aux_date = date.split("-").reverse().join('/');
                 this.consulted_ticket.created_at = aux_date + ' ' + hours;
-                this.consulted_ticket.price = res.ticket[0].price;
+                this.consulted_ticket.price = res.ticket[0].price.toFixed(2);
                 this.consulted_ticket.code = res.ticket[0].code;
                 this.consulted_ticket.status = res.ticket[0].status;
                 this.consulted_ticket.running = true;
@@ -360,6 +454,30 @@ export class HomePage {
     });
 
     await alert.present();
+  }
+
+  async get_price() {
+    var now = await Math.round((Date.now() / 1000));        
+    var aux = new Date();
+    await aux.setTime(Date.parse( this.ticket.created_at ));
+    let created_at = await Math.round(aux.getTime() / 1000) ;
+    let diff = await ((now - created_at));
+    let min_diff = diff / 60;
+    
+    if (min_diff < 30) { // periodo gratuito
+      this.ticket.price = 0;
+    } else { // fora do periodo gratuito
+      if (min_diff <= 60) { // primeira hora
+        this.ticket.price = 10; // primeira hora
+      } else { // demais horas
+        let total = (((min_diff - 60) / 60) * 5) + 10;
+        this.ticket.price = total.toFixed(2);
+      }
+    }
+  }
+
+  async pay_ticket() {
+    this.route.navigate(['/billings', { id: this.ticket.id }]);
   }
 
   async basic_alert(title, content) {

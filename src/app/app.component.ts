@@ -29,7 +29,7 @@ export class AppComponent {
     },
     {
       title: 'Pagamentos',
-      url: '/list',
+      url: '/billings',
       icon: '../assets/billing.png'
     }
   ];
@@ -76,31 +76,38 @@ export class AppComponent {
   }
 
   async check_available_slots() {
-    this.loader('Verificando...');
-    this.ws.get('tickets').then( async (res) => {
-      this.loader('dismiss');
-      let available_park_slots = await (this.park_slots - res.tickets.length);
+    await this.loader('Verificando...');
+    this.ws.get('vacancies').then( async (res) => {
+      await this.loader('dismiss');
+      console.log(res);
+      var availabe = 0;
+      var not_available = 0;
+      var vacancies = [];
+      var content = '';
       let title = "";
-      let content = "";
-      if (available_park_slots > 1) {
-        title = "Que sorte!";
-        content = `${ available_park_slots } vagas disponíveis`
-      } else if (available_park_slots === 1) {
-        title = "Que sorte!";
-        content = `1 vaga disponível`
+
+      await res.vacancies.forEach( async (item, index) => {
+        vacancies.push({ code: item.code, status: item.status });
+
+        if (item.status == 'Ativo') {
+          availabe++;
+        } else {
+          not_available++;
+        }
+      });
+      
+      let available_park_slots = await availabe;
+
+      if (available_park_slots > 0) {
+        this.nav.navigateForward([ '/vacancies', { vacancies: JSON.stringify(vacancies) } ]);
       } else {
         title = "Ops..."
-        content = `Nenhuma vaga disponível...`;
+        content = `O estacionamento está lotado!`;
+        this.basic_alert(title, content);
       }
 
-      const alert = await this.alertController.create({
-        header: `${ title }`,
-        message: content,
-        buttons: ['OK']
-      });
-      await alert.present();
     }, async (err) => {
-      this.loader('dismiss');
+      await this.loader('dismiss');
       console.log(err);
     });
   }
@@ -139,6 +146,10 @@ export class AppComponent {
 
   async login() {
     this.nav.navigateForward('/login');
+  }
+
+  async billing() {
+    this.nav.navigateForward('/billings');
   }
 
   async basic_alert(title, content) {

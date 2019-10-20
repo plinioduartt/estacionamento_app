@@ -19,7 +19,9 @@ const routes: Routes = [
   { path: 'register', loadChildren: './pages/register/register.module#RegisterPageModule' },
   { path: 'my-tickets', loadChildren: './pages/my-tickets/my-tickets.module#MyTicketsPageModule' },
   { path: 'operation', loadChildren: './pages/operation/operation.module#OperationPageModule' },
-  { path: 'prices', loadChildren: './pages/prices/prices.module#PricesPageModule' }
+  { path: 'prices', loadChildren: './pages/prices/prices.module#PricesPageModule' },
+  { path: 'billings', loadChildren: './pages/billings/billings.module#BillingsPageModule' },
+  { path: 'vacancies', loadChildren: './pages/vacancies/vacancies.module#VacanciesPageModule' }
 ];
 
 @NgModule({

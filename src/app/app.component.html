@@ -31,7 +31,14 @@
                 </ion-label>
               </ion-item>
 
-              <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" lines="none" *ngIf="p.title !== 'Consultar vagas' && p.title !== 'Consultar ticket'">
+              <ion-item [routerDirection]="'root'" lines="none" *ngIf="p.title === 'Pagamentos'" (click)="billing()">
+                <img class="list-icons" src="{{ p.icon }}"/>
+                <ion-label>
+                  {{ p.title }}
+                </ion-label>
+              </ion-item>
+
+              <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" lines="none" *ngIf="p.title !== 'Consultar vagas' && p.title !== 'Consultar ticket' && p.title !== 'Pagamentos'">
                   <img class="list-icons" src="{{ p.icon }}"/>
                   <ion-label>
                     {{ p.title }}

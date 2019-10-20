@@ -37,7 +37,7 @@
               
               <p>{{ consulted_ticket.end_at != null ? consulted_ticket.end_at : 'Em andamento' }}</p>
 
-              <p>R$ {{ consulted_ticket.price }},00</p>
+              <p>R$ {{ consulted_ticket.price }}</p>
               
               <p>{{ consulted_ticket.code }}</p>
               
@@ -48,7 +48,7 @@
         </div>
         
         <div class="buttons" *ngIf="user !== undefined && user !== null">
-          <button *ngIf="consulted_ticket.status == 'Ativo' && consulted_ticket.user_id == user.id">
+          <button *ngIf="consulted_ticket.status == 'Ativo' && consulted_ticket.user_id == user.id" (click)="pay_ticket()">
             Pagar
           </button>
           <button *ngIf="consulted_ticket.status == 'Inativo'" disabled>
@@ -66,7 +66,7 @@
       <p class="sem-ticket" *ngIf="!ticket.running">Nenhum ticket ativo</p>
     </div>
     <div class="container">
-      <div class="ticket" *ngIf="ticket.running" (click)="ticket_details()">
+      <div class="ticket animated bounceIn" *ngIf="ticket.running" (click)="ticket_details()">
         <div class="legendas">
           <p>Permanência</p>
           <h1>{{ ticket.timer }}</h1>
@@ -77,7 +77,7 @@
           <p>Ticket</p>
           <h1>{{ ticket.code }}</h1>
           <p>Preço</p>
-          <p>R$ {{ ticket.price }},00</p>
+          <p>R$ {{ ticket.price }}</p>
         </div>
         <div class="details">
           <p>Clique para ver detalhes</p>
@@ -85,13 +85,13 @@
       </div>
 
       <!-- Se não tiver ticket em andamento -->
-        <div class="create-ticket" (click)="create_ticket()" *ngIf="!ticket.running">
+        <div class="create-ticket animated bounceIn" (click)="create_ticket()" *ngIf="!ticket.running">
           <p>Gerar ticket</p>
         </div>
 
-      <button (click)="consult_ticket()"><img src="../../assets/billing.png"/>Consultar ticket</button>
-      <button (click)="nav_to('/my-tickets')" *ngIf="authenticated"><img src="../../assets/ticket.png"/>Meus tickets</button>
+      <button class="animated bounceIn" (click)="consult_ticket()"><img src="../../assets/billing.png"/>Consultar ticket</button>
+      <button class="animated bounceIn" (click)="nav_to('/my-tickets')" *ngIf="authenticated"><img src="../../assets/ticket.png"/>Meus tickets</button>
       <!-- Se não tiver ticket em andamento -->
-        <button *ngIf="!authenticated" (click)="check_available_slots()"><img src="../../assets/car.png"/>Vagas disponíveis</button>
+        <button class="animated bounceIn" *ngIf="!authenticated" (click)="check_available_slots()"><img src="../../assets/car.png"/>Vagas disponíveis</button>
     </div>
 </ion-content>

@@ -1,0 +1,66 @@
+<ion-header class="pages">
+  <ion-buttons slot="start">
+    <ion-back-button></ion-back-button>
+  </ion-buttons>
+  <ion-title>Pagamentos</ion-title>
+</ion-header>
+
+<ion-content>
+  <div class="consult-overlay" *ngIf="ticket.running">
+    <div class="consulted-ticket">
+      <div class="header">
+        <p (click)="ticket.running = false" class="close">Fechar</p>
+      </div>
+      <div class="title-method">
+        <p class="method">{{ ticket.tickets.code }} - Cartão de crédito</p>
+      </div>
+      <form [formGroup]="group">
+        <div class="content">
+          <div class="fields">            
+            <ion-input [(ngModel)]="form.numero" [brmasker]="{mask:'0000.0000.0000.0000', len:19}" formControlName="numero" type="tel" placeholder="Número do cartão"></ion-input>
+            <ion-input [(ngModel)]="form.cpf" [brmasker]="{mask:'000.000.000-00', len:14}" formControlName="cpf" type="tel" placeholder="CPF"></ion-input>
+            <div>
+              <ion-input [(ngModel)]="form.validade" [brmasker]="{mask:'00/00', len:5}" formControlName="validade" type="tel" placeholder="00/00"></ion-input>
+              <ion-input [(ngModel)]="form.codigo" [brmasker]="{mask:'0000', len:4}" formControlName="codigo" type="tel" placeholder="Código"></ion-input>
+            </div>
+            <p>
+              R$ {{ ticket.tickets.price }}
+            </p>
+          </div>
+        </div>
+        
+        <div class="buttons">
+          <button *ngIf="ticket.tickets.status == 'Ativo'" [disabled]="!group.valid" (click)="submit(ticket)">
+            Pronto, pode pagar!
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+  
+  <p class="my-tickets">Clique e pague já!</p>
+  <div class="itens-block" *ngIf="itens.length > 0">
+    <div class="item animated bounceIn" *ngFor="let item of itens" (click)="payment(item)">
+      <p class="method-p">{{ item.method }}</p>
+
+      <div>
+        <div [ngClass]="{'active': item.tickets.status == 'Ativo', 'inactive': item.tickets.status == 'Inativo'}"></div>
+      </div>
+      <div>
+        <p>Entr. {{ item.created_at }}</p>
+        <p>Ticket {{ item.tickets.code }}</p>
+      </div>
+      
+      <div>
+        <p>{{ item.tickets.status == 'Ativo' ? 'Pagamento pendente': 'Pagamento efetuado' }}</p>
+        <p class="footer-field">R$ {{ item.tickets.price }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="itens-block" *ngIf="itens.length == 0">
+    <div class="item">
+      <p>Nenhum item encontrado</p>
+    </div>
+  </div>
+</ion-content>

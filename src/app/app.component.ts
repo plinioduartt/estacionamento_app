@@ -128,6 +128,7 @@ export class AppComponent {
         localStorage.removeItem('user'); 
         this.nav.navigateForward('/login');
         this.authenticated = false;
+        this.events.publish('logout');
       }, 1500);
     }    
   }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController, NavController, LoadingController } from '@ionic/angular';
+import { MenuController, NavController, LoadingController, Events } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators }  from '@angular/forms';
 import { WebserviceService } from '../../services/webservice.service';
 import { AuthService } from '../../services/auth.service';
@@ -20,7 +20,8 @@ export class LoginPage implements OnInit {
     private formBuilder: FormBuilder, 
     public loadingCtrl: LoadingController, 
     public ws: WebserviceService,
-    public auth: AuthService
+    public auth: AuthService,
+    public events: Events
   ) 
   { 
     this.validate();
@@ -65,6 +66,7 @@ export class LoginPage implements OnInit {
       if (res.token !== null && res.token !== undefined) {
         localStorage.setItem('token', res.token);
         localStorage.setItem('user', JSON.stringify(res.user));
+        this.events.publish('login', res.user);
         this.nav.navigateForward('/home');
       }
     });

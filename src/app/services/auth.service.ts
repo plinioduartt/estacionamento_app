@@ -13,6 +13,7 @@ export class AuthService {
     return new Promise( async (resolve) => {
       this.ws.post('auth', credentials).subscribe( async (res) => {
         this.events.publish('auth', res);
+        console.log(res)
         resolve(res);
       }, async (err) => {
         console.log(err);

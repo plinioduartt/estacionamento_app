@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController, NavController, LoadingController, AlertController } from '@ionic/angular';
+import { MenuController, NavController, LoadingController, AlertController, Events } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators }  from '@angular/forms';
 import { WebserviceService } from '../../services/webservice.service';
 import { AuthService } from '../../services/auth.service';
@@ -23,7 +23,8 @@ export class RegisterPage implements OnInit {
     public loadingCtrl: LoadingController, 
     public ws: WebserviceService,
     public auth: AuthService,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public events: Events
   ) 
   {
     this.validate();
@@ -85,7 +86,8 @@ export class RegisterPage implements OnInit {
           console.log(res);
           if (res.token !== null && res.token !== undefined) {
             localStorage.setItem('token', res.token);
-            localStorage.setItem('user', user.username);
+            localStorage.setItem('user', JSON.stringify(user));
+            this.events.publish('login', user);
             this.nav.navigateForward('/home');
           }
         });

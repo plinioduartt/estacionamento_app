@@ -29,7 +29,7 @@ export class BillingsPage implements OnInit {
   ) 
   {
     this.validate();
-    if (localStorage.getItem('user') != null && localStorage.getItem('user') != undefined) {
+    if (localStorage.getItem('user') !== null && localStorage.getItem('user') !== undefined) {
       this.user = JSON.parse(localStorage.getItem('user'));
     }
   

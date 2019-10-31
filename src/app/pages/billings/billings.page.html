@@ -12,9 +12,9 @@
         <p (click)="ticket.running = false" class="close">Fechar</p>
       </div>
       <div class="title-method">
-        <p class="method">{{ ticket.tickets.code }} - Cartão de crédito</p>
+        <p class="method">{{ ticket.tickets.code }} - {{  ticket.tickets.price !== 0 ? "Cartão de crédito":"Carência" }}</p>
       </div>
-      <form [formGroup]="group">
+      <form [formGroup]="group" *ngIf="ticket.tickets.price !== 0">
         <div class="content">
           <div class="fields">            
             <ion-input [(ngModel)]="form.numero" [brmasker]="{mask:'0000.0000.0000.0000', len:19}" formControlName="numero" type="tel" placeholder="Número do cartão"></ion-input>
@@ -32,6 +32,25 @@
         <div class="buttons">
           <button *ngIf="ticket.tickets.status == 'Ativo'" [disabled]="!group.valid" (click)="submit(ticket)">
             Pronto, pode pagar!
+          </button>
+        </div>
+      </form>
+
+      <form *ngIf="ticket.tickets.price === 0">
+        <div class="content">
+          <div class="fields">           
+            <div>
+              <p class="carencia-text">Este ticket ainda está dentro do período de carência (30 minutos), portanto, o valor a ser pago será de R$ 0.<p>
+            </div>
+            <p>
+              R$ {{ ticket.tickets.price }}
+            </p>
+          </div>
+        </div>
+        
+        <div class="buttons">
+          <button (click)="submit(ticket)">
+            Pronto, pode finalizar!
           </button>
         </div>
       </form>

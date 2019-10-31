@@ -17,7 +17,7 @@ export class HomePage {
   ticket_timer: any = '';
   ticket: any = {
     id: '...',
-    running: true,
+    running: false,
     timer: '...',
     manipulated_date: '...',
     created_at: '...',
@@ -55,6 +55,16 @@ export class HomePage {
     this.events.subscribe('finalizado', async (data) => {
       this.handle_tickets();
       this.consulted_ticket.running = false;
+    });
+
+    this.events.subscribe('login', async (data) => {
+      this.user = data;
+      this.authenticated = true;
+    });
+
+    this.events.subscribe('logout', async (data) => {
+      this.user = {};
+      this.authenticated = false;
     });
   }
 
@@ -305,6 +315,13 @@ export class HomePage {
     }, 3000);
   }
 
+  ionViewDidEnter() {
+    this.handle_authentication();
+    setTimeout(() => {
+      this.get_price();
+    }, 3000);
+  }
+
   async handle_authentication() {
     if (localStorage.getItem('token') != null && localStorage.getItem('token') != undefined) {
       this.user = JSON.parse(localStorage.getItem('user'));
@@ -317,7 +334,7 @@ export class HomePage {
   }
 
   async handle_tickets() {
-    await this.loader('...');
+    // await this.loader('...');
     this.ws.get('user/tickets/active/'+this.user.id).then( async (res) => {
       console.log('Quantidade de tickets meus que estão ativos -->', res);
       if (res.tickets == null) {
@@ -334,10 +351,10 @@ export class HomePage {
         this.handle_time();
         this.handle_ticket_timer();
       }
-      await this.loader('dismiss');
+      // await this.loader('dismiss');
     }, async (err) => {
       console.log(err);
-      await this.loader('dismiss');
+      // await this.loader('dismiss');
     });
   }
 

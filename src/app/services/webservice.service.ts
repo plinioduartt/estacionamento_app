@@ -7,11 +7,11 @@ import { Http, Headers } from '@angular/http';
 
 export class WebserviceService {
 	public  headers = new Headers({ 'Accept':'application/json','Content-Type': 'application/json; charset=utf-8' });
-  private url_base = "http://192.168.10.107:3333/";
+	private url_base = "http://192.168.100.8:3333/";
 
-  constructor(public http: Http) { }
+	constructor(public http: Http) { }
 
-  header() {
+	header() {
 		this.headers = new Headers({'Accept':'application/json', 'Authorization':'Bearer '+localStorage.getItem('token') });		
 	}
 

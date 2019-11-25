@@ -38,7 +38,24 @@ export class MyTicketsPage implements OnInit {
           res.tickets[index].price = res.tickets[index].price.toFixed(2);
         }
 
-        let parts = item.created_at.split(" ");
+        /* FIX DO HORARIO DE VERAO */
+          var fix1 = await new Date();
+          await fix1.setTime(Date.parse(item.created_at));   
+          await  fix1.setHours( fix1.getHours() - 1);
+
+          let fixed1 = `${ fix1.getDate() }/${ fix1.getMonth() }/${ fix1.getFullYear() } ${ 
+            fix1.getHours() < 10 ? 
+            '0' + fix1.getHours(): fix1.getHours() 
+          }:${ 
+            fix1.getMinutes() < 10 ? 
+            '0' + fix1.getMinutes(): fix1.getMinutes() 
+          }:${ 
+            fix1.getSeconds() < 10 ? 
+            '0' + fix1.getSeconds(): fix1.getSeconds()  
+          }`;
+        /* FIX DO HORARIO DE VERAO */
+        
+        let parts = fixed1.split(" ");
         let hours = parts[1];
         let hours_parts = hours.split(":");
         hours = hours_parts[0]+':'+hours_parts[1];
@@ -48,7 +65,25 @@ export class MyTicketsPage implements OnInit {
         aux_date = aux_date_parts[0]+'/'+aux_date_parts[1];
         res.tickets[index].created_at = aux_date + ' ' + hours;
 
-        let parts_updatedat = item.updated_at.split(" ");
+
+        /* FIX DO HORARIO DE VERAO */
+          var fix2 = await new Date();
+          await fix2.setTime(Date.parse(item.updated_at));   
+          await  fix2.setHours( fix2.getHours() - 1);
+
+          let fixed2 = `${ fix2.getDate() }/${ fix2.getMonth() }/${ fix2.getFullYear() } ${ 
+            fix2.getHours() < 10 ? 
+            '0' + fix2.getHours(): fix2.getHours() 
+          }:${ 
+            fix2.getMinutes() < 10 ? 
+            '0' + fix2.getMinutes(): fix2.getMinutes() 
+          }:${ 
+            fix2.getSeconds() < 10 ? 
+            '0' + fix2.getSeconds(): fix2.getSeconds()  
+          }`;
+        /* FIX DO HORARIO DE VERAO */
+        
+        let parts_updatedat = fixed2.split(" ");
         let hours_updatedat = parts_updatedat[1];
         let hours_updatedat_parts = hours_updatedat.split(":");
         hours_updatedat = hours_updatedat_parts[0]+':'+hours_updatedat_parts[1];
@@ -59,11 +94,28 @@ export class MyTicketsPage implements OnInit {
         res.tickets[index].updated_at = aux_date_updatedat + ' ' + hours_updatedat;
 
         if (item.end_at != null && item.end_at != undefined) {
-          let parts_endat = item.end_at.split(" ");
-          if (parts_endat[0] == item.end_at)
-            parts_endat = item.end_at.split("T");
 
-          console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", parts_endat)
+          /* FIX DO HORARIO DE VERAO */
+            var fix3 = await new Date();
+            await fix3.setTime(Date.parse(item.end_at));   
+            await  fix3.setHours( fix3.getHours() - 1);
+
+            let fixed3 = `${ fix3.getDate() }/${ fix3.getMonth() }/${ fix3.getFullYear() } ${ 
+              fix3.getHours() < 10 ? 
+              '0' + fix3.getHours(): fix3.getHours() 
+            }:${ 
+              fix3.getMinutes() < 10 ? 
+              '0' + fix3.getMinutes(): fix3.getMinutes() 
+            }:${ 
+              fix3.getSeconds() < 10 ? 
+              '0' + fix3.getSeconds(): fix3.getSeconds()  
+            }`;
+          /* FIX DO HORARIO DE VERAO */
+        
+          let parts_endat = fixed3.split(" ");
+          if (parts_endat[0] == item.end_at)
+            parts_endat = fixed3.split("T");
+
           let hours_endat = parts_endat[1];
           let hours_endat_parts = hours_endat.split(":");
           hours_endat = hours_endat_parts[0]+':'+hours_endat_parts[1];

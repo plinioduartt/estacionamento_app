@@ -39,7 +39,24 @@ export class BillingsPage implements OnInit {
         await this.loader('Carregando informações...');
         this.ws.get('bills/ticket/'+params.id).then( async (res) => {
 
-          let parts = res.bill.created_at.split(" ");
+          /* FIX DO HORARIO DE VERAO */
+            var fix = await new Date();
+            await fix.setTime(Date.parse(res.bill.created_at));   
+            await  fix.setHours( fix.getHours() - 1);
+
+            let fixed = `${ fix.getDate() }/${ fix.getMonth() }/${ fix.getFullYear() } ${ 
+              fix.getHours() < 10 ? 
+              '0' + fix.getHours(): fix.getHours() 
+            }:${ 
+              fix.getMinutes() < 10 ? 
+              '0' + fix.getMinutes(): fix.getMinutes() 
+            }:${ 
+              fix.getSeconds() < 10 ? 
+              '0' + fix.getSeconds(): fix.getSeconds()  
+            }`;
+          /* FIX DO HORARIO DE VERAO */
+
+          let parts = fixed.split(" ");
           let hours = parts[1];
           let hours_parts = hours.split(":");
           hours = hours_parts[0]+':'+hours_parts[1];
@@ -95,11 +112,14 @@ export class BillingsPage implements OnInit {
       var now = await Math.round((Date.now() / 1000));        
       var aux = new Date();
       await aux.setTime(Date.parse( item.created_at ));
+
+      await  aux.setHours( aux.getHours() - 1);   // FIX DO HORÁRIO DE VERÃO
+
       let created_at = await Math.round(aux.getTime() / 1000) ;
       let diff = await ((now - created_at));
       let min_diff = diff / 60;
-      
-      if (min_diff < 30) { // periodo gratuito
+
+      if (min_diff < 15) { // periodo gratuito
         resolve(0);
       } else { // fora do periodo gratuito
         if (min_diff <= 60) { // primeira hora
@@ -117,7 +137,25 @@ export class BillingsPage implements OnInit {
     this.ws.get('bills/'+this.user.id).then( async (res) => {
       console.log(res)
       await res.bills.forEach( async (item, index) => {
-        let parts = item.created_at.split(" ");
+
+        /* FIX DO HORARIO DE VERAO */
+          var fix = await new Date();
+          await fix.setTime(Date.parse(item.created_at));   
+          await  fix.setHours( fix.getHours() - 1);
+
+          let fixed = `${ fix.getDate() }/${ fix.getMonth() }/${ fix.getFullYear() } ${ 
+            fix.getHours() < 10 ? 
+            '0' + fix.getHours(): fix.getHours() 
+          }:${ 
+            fix.getMinutes() < 10 ? 
+            '0' + fix.getMinutes(): fix.getMinutes() 
+          }:${ 
+            fix.getSeconds() < 10 ? 
+            '0' + fix.getSeconds(): fix.getSeconds()  
+          }`;
+        /* FIX DO HORARIO DE VERAO */
+
+        let parts = fixed.split(" ");
         let hours = parts[1];
         let hours_parts = hours.split(":");
         hours = hours_parts[0]+':'+hours_parts[1];

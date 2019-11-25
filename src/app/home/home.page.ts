@@ -359,7 +359,24 @@ export class HomePage {
   }
 
   async handle_time() {
-    let parts = this.ticket.created_at.split(" ");
+    /* FIX DO HORARIO DE VERAO */
+      var fix = await new Date();
+      await fix.setTime(Date.parse(this.ticket.created_at));   
+      await  fix.setHours( fix.getHours() - 1);
+
+      let fixed_date = `${ fix.getDate() }/${ fix.getMonth() }/${ fix.getFullYear() } ${ 
+        fix.getHours() < 10 ? 
+        '0' + fix.getHours(): fix.getHours() 
+      }:${ 
+        fix.getMinutes() < 10 ? 
+        '0' + fix.getMinutes(): fix.getMinutes() 
+      }:${ 
+        fix.getSeconds() < 10 ? 
+        '0' + fix.getSeconds(): fix.getSeconds()  
+      }`;
+    /* FIX DO HORARIO DE VERAO */
+
+    let parts = fixed_date.split(" ");
     let hours = parts[1];
     let date = parts[0];
     let aux_date = date.split("-").reverse().join('/');
@@ -372,6 +389,8 @@ export class HomePage {
       var now = await Math.round((Date.now() / 1000));        
       var aux = new Date();
       await aux.setTime(Date.parse( this.ticket.created_at ));
+      await aux.setHours(aux.getHours() - 1); // Fix para o bug do servidor com configurações em pt-br contendo o horário de verão
+
       let updated_at = await Math.round(aux.getTime() / 1000) ;
       let diff = await ((now - updated_at));
 
@@ -381,8 +400,8 @@ export class HomePage {
       let hours = await Math.floor(mins / 60);
       let h = await hours % 60;
       let secs  = await s % 60;  
-      
-      if (hours == 0 && m == 0)
+
+      if (hours == 0 && m == 0 && secs == 10)
         secs = secs - 10;
 
       let timer:any = await (hours + ":" + (m < 10 ? '0' + m : m) + ':' + (secs < 10 ? '0' + secs : secs));
@@ -432,6 +451,7 @@ export class HomePage {
                 var now = await Math.round((Date.now() / 1000));        
                 var aux = new Date();
                 await aux.setTime(Date.parse( res.ticket[0].created_at ));
+                await aux.setHours(aux.getHours() - 1); // Fix para o bug do servidor com configurações em pt-br contendo o horário de verão
                 let created_at = await Math.round(aux.getTime() / 1000) ;
                 let diff = await ((now - created_at));
                 let min_diff = diff / 60;
@@ -477,6 +497,7 @@ export class HomePage {
     var now = await Math.round((Date.now() / 1000));        
     var aux = new Date();
     await aux.setTime(Date.parse( this.ticket.created_at ));
+    await aux.setHours(aux.getHours() - 1); // Fix para o bug do servidor com configurações em pt-br contendo o horário de verão
     let created_at = await Math.round(aux.getTime() / 1000) ;
     let diff = await ((now - created_at));
     let min_diff = diff / 60;

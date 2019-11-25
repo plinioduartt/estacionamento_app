@@ -138,7 +138,7 @@ export class AppComponent {
   }
 
   async prices() {
-    this.basic_alert('Preços', 'Até 30 minutos é GRATUITO. Primeira hora é R$ 10,00. Demais horas R$ 5,00 (cada).');
+    this.basic_alert('Preços', 'Até 15 minutos é GRATUITO. Primeira hora é R$ 10,00. Demais horas R$ 5,00 (cada).');
   }
 
   async consult_ticket() {

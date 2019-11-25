@@ -502,7 +502,7 @@ export class HomePage {
     let diff = await ((now - created_at));
     let min_diff = diff / 60;
     
-    if (min_diff < 30) { // periodo gratuito
+    if (min_diff < 15) { // periodo gratuito
       this.ticket.price = 0;
     } else { // fora do periodo gratuito
       if (min_diff <= 60) { // primeira hora
